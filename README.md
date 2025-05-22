@@ -9,13 +9,9 @@ A secure file sharing system built with **FastAPI**, **MongoDB**, and **Docker**
 - User Registration with Email Verification  
 - Secure Login with JWT  
 - Role-based Access Control  
-- File Upload & Download APIs  
-- MongoDB Integration  
-- Dockerized for easy deployment  
-- REST API with automatic documentation via Swagger  
+- File Upload & Download APIs 
 
 ---
-
 ##  Tech Stack
 
 - **Backend**: FastAPI, Python 3.11+
