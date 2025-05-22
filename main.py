@@ -1,4 +1,4 @@
-# secure_file_sharing_api/main.py
+
 
 from fastapi import FastAPI, HTTPException, Depends, UploadFile, File, BackgroundTasks
 from fastapi.responses import FileResponse
@@ -12,7 +12,7 @@ import os, shutil, uuid
 
 app = FastAPI()
 
-# --- Configuration ---
+# Config
 SECRET_KEY = "mysecretkey"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
@@ -25,11 +25,11 @@ db = client.secure_share
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 
-# --- Models ---
+
 class User(BaseModel):
     email: EmailStr
     password: str
-    role: str  # either 'ops' or 'client'
+    role: str 
 
 class FileMetadata(BaseModel):
     id: str
@@ -37,7 +37,7 @@ class FileMetadata(BaseModel):
     uploaded_by: str
     upload_time: datetime
 
-# --- Helper Functions ---
+
 def get_password_hash(password):
     return pwd_context.hash(password)
 
@@ -60,7 +60,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         raise HTTPException(status_code=403, detail="Invalid authentication")
     raise HTTPException(status_code=404, detail="User not found")
 
-# --- Auth Routes ---
+
 @app.post("/signup")
 async def signup(user: User):
     if await db.users.find_one({"email": user.email}):
@@ -91,7 +91,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     access_token = create_access_token(data={"sub": user['email']}, expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
     return {"access_token": access_token, "token_type": "bearer"}
 
-# --- File Upload ---
+
 @app.post("/upload")
 async def upload_file(file: UploadFile = File(...), current_user=Depends(get_current_user)):
     if current_user['role'] != 'ops':
@@ -106,7 +106,6 @@ async def upload_file(file: UploadFile = File(...), current_user=Depends(get_cur
     await db.files.insert_one({"id": file_id, "filename": file.filename, "uploaded_by": current_user['email'], "upload_time": datetime.utcnow()})
     return {"message": "File uploaded successfully", "file_id": file_id}
 
-# --- File List ---
 @app.get("/files")
 async def list_files(current_user=Depends(get_current_user)):
     if current_user['role'] != 'client':
@@ -114,7 +113,7 @@ async def list_files(current_user=Depends(get_current_user)):
     files = await db.files.find().to_list(None)
     return [{"id": f['id'], "filename": f['filename']} for f in files]
 
-# --- Generate Secure Download Link ---
+
 @app.get("/download-file/{file_id}")
 async def get_download_link(file_id: str, current_user=Depends(get_current_user)):
     if current_user['role'] != 'client':
@@ -122,7 +121,7 @@ async def get_download_link(file_id: str, current_user=Depends(get_current_user)
     token = create_access_token({"file_id": file_id, "user": current_user['email']}, timedelta(minutes=10))
     return {"download-link": f"/secure-download/{token}", "message": "success"}
 
-# --- Download Endpoint ---
+
 @app.get("/secure-download/{token}")
 async def secure_download(token: str, current_user=Depends(get_current_user)):
     try:
