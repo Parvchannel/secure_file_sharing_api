@@ -1,0 +1,86 @@
+{
+	"info": {
+		"_postman_id": "e3bdc812-d39f-4f2b-8f1f-41904e44e9e4",
+		"name": "EZ Backend Assignment",
+		"description": "Postman collection for EZ backend intern assignment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "45250275",
+		"_collection_link": "https://parv-7856100.postman.co/workspace/Parv's-Workspace~60c07c7e-542d-4926-89b0-fd99d5dfeeb9/collection/45250275-e3bdc812-d39f-4f2b-8f1f-41904e44e9e4?action=share&source=collection_link&creator=45250275"
+	},
+	"item": [
+		{
+			"name": "Signup",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"testuser@ezlabs.in\",\n  \"password\": \"test1234\"\n}"
+				},
+				"url": "http://localhost:8000/api/signup"
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"testuser@ezlabs.in\",\n  \"password\": \"test1234\"\n}"
+				},
+				"url": "http://localhost:8000/api/login"
+			},
+			"response": []
+		},
+		{
+			"name": "Upload File",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"value": "",
+							"type": "file"
+						},
+						{
+							"key": "userId",
+							"value": "645dfca12498ff001c3a9e34",
+							"type": "text"
+						}
+					]
+				},
+				"url": "http://localhost:8000/api/upload"
+			},
+			"response": []
+		},
+		{
+			"name": "Download File",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:8000/api/download/abc123xyz"
+			},
+			"response": []
+		}
+	]
+}
